@@ -15,6 +15,7 @@ public class SampleApp {
         // Set language model.
         configuration.setLanguageModelPath("resource:/edu/cmu/sphinx/models/en-us/en-us.lm.bin");
 
+        // Create StreamSpeechRecognizer.
         StreamSpeechRecognizer recognizer = null;
         try {
             recognizer = new StreamSpeechRecognizer(configuration);
@@ -23,16 +24,20 @@ public class SampleApp {
         }
         InputStream stream = null;
         try {
+            // Read from test.wav (in project root directory).
             stream = new FileInputStream(new File("test.wav"));
         } catch (FileNotFoundException e) {
+            // Display full stack trace if file cannot be located.
             e.printStackTrace();
         }
 
         recognizer.startRecognition(stream);
         SpeechResult result;
         while ((result = recognizer.getResult()) != null) {
+            // Final (detected) output in English.
             System.out.format("Hypothesis: %s\n", result.getHypothesis());
         }
+        // Needs to be called in order to close the application.
         recognizer.stopRecognition();
     }
 }
